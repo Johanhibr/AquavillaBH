@@ -1,0 +1,16 @@
+{
+    "feature_name" : "_{feature_name} - {stage}",
+    "capacity_id": "E29D4128-28B2-4656-8E31-D91B0246F0A6",
+    "key_vault_name" : "kv-bhdp-dev",
+    "spark_settings": {
+        "pool": {
+            "starterPool":{
+                "maxExecutors": 1,
+                "maxNodeCount": 1
+            }
+        }
+    },
+    "stages" : {
+        "Prepare": { }
+    }
+}

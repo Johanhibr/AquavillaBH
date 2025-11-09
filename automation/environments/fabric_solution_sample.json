@@ -1,0 +1,57 @@
+{
+    "name" : "WorkspaceNamePrefix - {stage} [{environment}]",
+    "key_vault_name" : "kv-solutionname-dev",
+    "parameters" : 
+    {
+        "generic": {
+            
+            "capacity_id": "00000000-0000-0000-0000-000000000000",
+            "permissions": {
+                "Admin": [
+                    {"type": "Group", "id": "00000000-0000-0000-0000-000000000000"},
+                    {"type": "User", "id": "00000000-0000-0000-0000-000000000000"}
+                ],
+                "Member": [
+                    {"type": "Group", "id": "00000000-0000-0000-0000-000000000000"},
+                    {"type": "User", "id": "00000000-0000-0000-0000-000000000000"}
+                ]
+            }
+        },
+        "stages" : {
+            "Store": { 
+                "items": {
+                    "Lakehouse": [
+                        {"item_name": "Landing"},
+                        {"item_name": "Base"},
+                        {"item_name": "Enriched"},
+                        {"item_name": "Curated", "connection_name":"SolutionName-Curated [{environment}]"}
+                    ],
+                    "SQLDatabase": [
+                        {"item_name": "Metadata", "connection_name":"SolutionName-MetadataDB [{environment}]"}
+                    ]
+                }
+            },
+            "Prepare": { 
+                "capacity_id": "00000000-0000-0000-0000-000000000000",
+                "git_integration" : { 
+                    "DevOpsOrgName" : "DevOpsOrgName",
+                    "DevOpsProjectName" : "DevOpsProjectName",
+                    "DevOpsRepoName" : "DevOpsRepoName",
+                    "DevOpsDefaultBranch" : "development",
+                    "DevOpsFabricSolutionFolder" : "/solution/prepare"
+                },
+                "private_endpoints" : 
+                    [
+                        {
+                            "name": "mpe-kv-solutionname-dev", 
+                            "auto_approve": true,
+                            "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-solutionname-dev/providers/Microsoft.KeyVault/vaults/kv-solutionname-dev"
+                        }
+                    ]
+            },
+            "Semantic": { },
+            "Ingest": { },
+            "Orchestrate": { }
+        }
+    }
+}

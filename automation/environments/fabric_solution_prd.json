@@ -1,0 +1,67 @@
+{
+    "key_vault_name": "kv-bhdp-prod",
+    "name": "By og Havn DP - {stage} [{environment}]",
+    "parameters": {
+        "generic": {
+            "capacity_id": "D84FDBCA-92B5-452D-A26B-5FC2D6A7F5A4",
+            "permissions": {
+                "Admin": [
+                    {
+                        "id": "519aed98-ed1d-4331-ab05-f37dc465b595",
+                        "type": "Group"
+                    }
+                ],
+                "Member": [
+                    {
+                        "id": "b30703ba-6975-48ff-9d89-c7f16412cd20",
+                        "type": "Group"
+                    }
+                ]
+            }
+        },
+        "stages": {
+            "Orchestrate": {
+                "workspace_id": "f2b0acf4-02e1-46c3-985d-5efe06d978c5",
+                "workspace_name": "By og Havn DP - Orchestrate [prd]"
+            },
+            "Prepare": {
+                "workspace_id": "da3b84da-a2b4-4911-a6a9-e6ca8e428539",
+                "workspace_name": "By og Havn DP - Prepare [prd]"
+            },
+            "Semantic": {
+                "workspace_id": "fcd99be6-f21e-4de6-9890-362324fcdb91",
+                "workspace_name": "By og Havn DP - Semantic [prd]"
+            },
+            "Store": {
+                "items": {
+                    "Lakehouse": [
+                        {
+                            "id": "949b6636-a504-4d96-9271-2f60e1544314",
+                            "item_name": "Landing",
+                            "sql_endpoint_connectionstring": "n44mbtgbowmetovmp7szkfunyq-eurd6fuwezaupd5rzdyl36ouxa.datawarehouse.fabric.microsoft.com",
+                            "sql_endpoint_id": "73236e88-b52d-4a52-b656-17f8fa70f9cb"
+                        },
+                        {
+                            "id": "305d1391-32b0-42d2-bbab-1595c8a0d576",
+                            "item_name": "Base",
+                            "sql_endpoint_connectionstring": "n44mbtgbowmetovmp7szkfunyq-eurd6fuwezaupd5rzdyl36ouxa.datawarehouse.fabric.microsoft.com",
+                            "sql_endpoint_id": "67d5aaa0-60c8-45ec-a87a-ec130f5faeea"
+                        },
+                        {
+                            "connection_name": "BHDP-Curated [{environment}]",
+                            "id": "4fd13b12-1032-478c-bb60-7a0df7af9050",
+                            "item_name": "Curated",
+                            "pbi_connection_gatewayid": null,
+                            "pbi_connection_id": "c02e50d8-52a3-46ff-832b-74c10cb374ac",
+                            "pbi_connection_name": "BHDP-Curated [prd]",
+                            "sql_endpoint_connectionstring": "n44mbtgbowmetovmp7szkfunyq-eurd6fuwezaupd5rzdyl36ouxa.datawarehouse.fabric.microsoft.com",
+                            "sql_endpoint_id": "95c0d192-0b03-4fb0-a208-e577a5a2f88e"
+                        }
+                    ]
+                },
+                "workspace_id": "163f2225-2696-4741-8fb1-c8f0bdf9d4b8",
+                "workspace_name": "By og Havn DP - Store [prd]"
+            }
+        }
+    }
+}

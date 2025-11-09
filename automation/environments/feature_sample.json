@@ -1,0 +1,22 @@
+{
+    "feature_name" : "_{feature_name} - {stage}",
+    "capacity_id": "00000000-0000-0000-0000-000000000000",
+    "key_vault_name" : "kv-solutionname-dev",
+    "spark_settings": {
+        "pool": {
+            "starterPool":{
+                "maxExecutors": 1,
+                "maxNodeCount": 1
+            }
+        }
+    },
+    "git_integration" : { 
+        "DevOpsOrgName" : "DevOpsOrgName",
+        "DevOpsProjectName" : "DevOpsProjectName",
+        "DevOpsRepoName" : "DevOpsRepoName",
+        "DevOpsDefaultBranch" : "development"
+    },
+    "stages" : {
+        "Prepare": { "git_folder" : "solution/preare" }
+    }
+}

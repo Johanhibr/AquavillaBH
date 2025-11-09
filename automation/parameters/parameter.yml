@@ -1,0 +1,105 @@
+find_replace:
+  - find_value: kv-bhdp-dev  # key vault name
+    replace_value:
+        tst: kv-bhdp-test
+        prd: kv-bhdp-prod
+
+  - find_value: 62575cf5-49bd-41c0-a5d3-9cc1430256d5 # Prepare workspace ID
+    replace_value:
+        tst: e6850870-4e7d-4b5f-a06f-562c4e55db72
+        prd: da3b84da-a2b4-4911-a6a9-e6ca8e428539
+
+  - find_value: 4358b870-4392-403f-8b26-dc95456769dd  # Store workspace ID
+    replace_value:
+        tst: b3de0feb-959b-4c81-b458-19c53bacd973
+        prd: 163f2225-2696-4741-8fb1-c8f0bdf9d4b8
+
+  - find_value: d38c0378-d5b9-43b4-bfa1-ebcafeae712f # Orchestrate workspace ID
+    replace_value:
+        tst: ede16300-3fa3-480a-aa51-1b3e8ac73386
+        prd: f2b0acf4-02e1-46c3-985d-5efe06d978c5
+
+  - find_value: 0e955a64-1fc5-4a9e-946f-243c52cbf8c3  # Semantic workspace ID
+    replace_value:
+        tst: 25c89e4e-9470-488a-88eb-fc3fa83f6b1e
+        prd: fcd99be6-f21e-4de6-9890-362324fcdb91
+
+  - find_value: a07acfed-1667-44de-b314-149860b17540 # Ingest Spirii Notebook ID
+    replace_value:
+        tst: 9bf7b495-b859-4a01-8250-b547b3c2a105
+        prd: 9bf7b495-b859-4a01-8250-b547b3c2a105 #NOT DEPLOYED YET - TBD
+
+  - find_value: cb8c890c-de34-4ee4-a099-ad93e73e9688  # Landing To Base Notebook ID
+    replace_value:
+        tst: 30ce60e6-9db6-475f-b443-46cc6c471a62
+        prd: bd12d29d-def0-4bc6-a718-e418a9c369f2
+
+  - find_value: 9fa0bfa5-4dba-4b62-8eae-9fafc570942b  # D365FO Landing To Base Notebook ID
+    replace_value:
+        tst: 37002d29-82ef-48bd-99bf-e6d8edf3bf24
+        prd: c2dafd3c-e820-4937-8ef5-cd4ac792b59e
+
+  - find_value: 417b907b-d656-4037-af53-3b690f4ca73a # Update SQL Endpoint Notebook ID
+    replace_value:
+        tst: cf6a4f1a-9eb5-4bf2-89f1-d9f8abbd695c
+        prd: d6d34efa-cec4-41d5-9ca6-fc4208fb102c
+
+  - find_value: dd9d0324-f7e6-41e6-8fe0-bcf76cd4cfdd  # Base To Curated Parent Notebok ID
+    replace_value:
+        tst: b7273995-314a-4949-8be4-ff8643c293a6
+        prd: 1a6a4e64-5512-46ba-8a25-2941e0b00327
+
+  - find_value: 3c72c59a-45e8-4a87-9890-071f7bded7c8  # Curated tables to Base tables dependencies Notebook ID
+    replace_value:
+        tst: 7a2eb0aa-ad45-4b02-bd6a-1984492c8c9f
+        prd: a4310c00-c561-4ae1-85ac-daa250bcde40
+
+  - find_value: fb9aae20-8169-48f9-8ff2-85cce50a60b9  # ADF Controller Master ID
+    replace_value:
+        tst: 10c99377-188e-4275-89b3-53dec3428d8c
+        prd: 49b82f0c-9b00-45da-b433-21083557845f
+
+  - find_value: 3a0f1db1-3f2b-43d0-ac93-e2eb316e7ef1  # Create View Pipeline ID
+    replace_value:
+        tst: 456dd401-9585-4329-aba3-d71613f8ae7a
+        prd: 118b3180-bccd-478d-9a99-d3b58954ba81
+
+  - find_value: 548436e9-ba7c-47e0-abe5-2248612971e4  # 0_Send Error Notification Pipeline ID
+    replace_value:
+        tst: e5ace34b-05ad-47dd-82af-3f5f3362cc8c
+        prd: f91e7504-1846-49d4-b90f-873ee2fe57bf
+
+  - find_value: 52a48d38-a1c2-4b28-93fe-b78df4db4b2e  # Semantic model external connection ID
+    replace_value:
+        tst: 2d44971b-a8a7-4a38-b155-52c144553b97
+        prd: 6c2f4d84-d9bc-45dc-bd84-12bcd1943e0a
+
+  - find_value: 0a6bc902-cad5-45de-a8b7-ef928ff544df  # Landing Lakehouse ID
+    replace_value:
+        tst: 0836a5ea-e097-4abe-83d9-daefb0b991b9
+        prd: 949b6636-a504-4d96-9271-2f60e1544314
+
+  - find_value: c83ca59e-f468-4305-a323-a324e0fb54b4  # Base Lakehouse ID
+    replace_value:
+        tst: 15b0d960-e426-4f0c-9536-25d9b930efe1
+        prd: 305d1391-32b0-42d2-bbab-1595c8a0d576
+
+  - find_value: 2215fdc2-5d05-4516-882c-92b6c0bcd831  # Curated Lakehouse ID
+    replace_value:
+        tst: 285d9401-1167-4898-a396-eadd0e081bc5
+        prd: 4fd13b12-1032-478c-bb60-7a0df7af9050
+
+  - find_value: n44mbtgbowmetovmp7szkfunyq-oc4fqq4sim7ubczg3skukz3j3u.datawarehouse.fabric.microsoft.com  # SQL Connection String from Curate
+    replace_value:
+        tst: n44mbtgbowmetovmp7szkfunyq-5mh55m43swauzncydhctxlgzom.datawarehouse.fabric.microsoft.com
+        prd: n44mbtgbowmetovmp7szkfunyq-eurd6fuwezaupd5rzdyl36ouxa.datawarehouse.fabric.microsoft.com
+  
+  - find_value: ecb9c2fd-8c53-4450-911c-855c2ef0863a  # SQL Endpoint ID from Curate
+    replace_value:
+      tst: b93a8287-8609-4b79-9ca6-a50491db4fc8
+      prd: 95c0d192-0b03-4fb0-a208-e577a5a2f88e
+
+  - find_value: ce4a9fc3-73a6-48ca-b1dd-c75da4fd6786  # Semantic model ID
+    replace_value:
+        tst: 0268f44f-330c-472c-8bd1-03ac75127e5a
+        prd: 0268f44f-330c-472c-8bd1-03ac75127e5a #NOT DEPLOYED YET - TBD

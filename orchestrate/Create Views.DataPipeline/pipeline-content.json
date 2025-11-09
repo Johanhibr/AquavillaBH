@@ -1,0 +1,1699 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Generate View Dim Business Unit",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Business Unit] AS\nSELECT\n     business_unit_id AS 'BusinessUnitID'\n    ,business_unit_key AS 'Business Unit Key'\n    ,business_unit_no AS 'Business Unit No'\n    ,business_unit_description AS 'Business Unit Description'\n    ,business_unit_level_1_description AS 'Business Unit Level 1 Description'\n    ,business_unit_no_and_description AS 'Business Unit No And Description'\nFROM dim_business_unit\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Set CurrentWorkspaceID",
+        "type": "SetVariable",
+        "dependsOn": [],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "CurrentWorkspaceID",
+          "value": {
+            "value": "@pipeline().DataFactory",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "Set SQLConnectionString",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "Set CurrentWorkspaceID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "SQLConnectionString",
+          "value": "n44mbtgbowmetovmp7szkfunyq-oc4fqq4sim7ubczg3skukz3j3u.datawarehouse.fabric.microsoft.com"
+        }
+      },
+      {
+        "name": "Set SQLEndpointID",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "Set CurrentWorkspaceID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "SQLEndpointID",
+          "value": "ecb9c2fd-8c53-4450-911c-855c2ef0863a"
+        }
+      },
+      {
+        "name": "Set WorkspaceIStoreID",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "Set CurrentWorkspaceID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "WorkspaceStoreID",
+          "value": "4358b870-4392-403f-8b26-dc95456769dd"
+        }
+      },
+      {
+        "name": "Drop Views",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Set SQLConnectionString",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Set SQLEndpointID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Set WorkspaceIStoreID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "-- DIMENSIONS\nDROP VIEW IF EXISTS [dbo].[Dim Business Unit];\nDROP VIEW IF EXISTS [dbo].[Dim Area];\nDROP VIEW IF EXISTS [dbo].[Dim Calendar];\nDROP VIEW IF EXISTS [dbo].[Dim Property];\nDROP VIEW IF EXISTS [dbo].[Dim Department];\nDROP VIEW IF EXISTS [dbo].[Dim Project];\nDROP VIEW IF EXISTS [dbo].[Dim Customer];\nDROP VIEW IF EXISTS [dbo].[Dim Customer Tenant];\nDROP VIEW IF EXISTS [dbo].[Dim Lease Category];\nDROP VIEW IF EXISTS [dbo].[Dim Project Category];\nDROP VIEW IF EXISTS [dbo].[Dim Building];\nDROP VIEW IF EXISTS [dbo].[Dim Building Floor];\nDROP VIEW IF EXISTS [dbo].[Dim Lease Contract];\nDROP VIEW IF EXISTS [dbo].[Dim Vendor];\nDROP VIEW IF EXISTS [dbo].[Dim Item];\nDROP VIEW IF EXISTS [dbo].[Dim Property Unit];\nDROP VIEW IF EXISTS [dbo].[Dim Financial Account];\nDROP VIEW IF EXISTS [dbo].[Dim Resource];\nDROP VIEW IF EXISTS [dbo].[Dim Budget];\nDROP VIEW IF EXISTS [dbo].[Dim Currency];\nDROP VIEW IF EXISTS [dbo].[Dim Asset];\nDROP VIEW IF EXISTS [dbo].[Dim Company];\nDROP VIEW IF EXISTS [dbo].[Dim Time];\nDROP VIEW IF EXISTS [dbo].[Dim Charge Point];\nDROP VIEW IF EXISTS [dbo].[Dim Product];\nDROP VIEW IF EXISTS [dbo].[Dim Parking Product Category];\n-- FACTS\nDROP VIEW IF EXISTS [dbo].[Fact Project Transactions];\nDROP VIEW IF EXISTS [dbo].[Fact Lease Contract Transactions];\nDROP VIEW IF EXISTS [dbo].[Fact Lease Contract Lines];\nDROP VIEW IF EXISTS [dbo].[Fact Building Areas];\nDROP VIEW IF EXISTS [dbo].[Fact Financial Budget Entries]\nDROP VIEW IF EXISTS [dbo].[Fact Financial Transactions]\nDROP VIEW IF EXISTS [dbo].[Fact Project Investment Budget]\nDROP VIEW IF EXISTS [dbo].[Fact Charges]\nDROP VIEW IF EXISTS [dbo].[Fact Customer Licenses]\n-- BRIDGES\nDROP VIEW IF EXISTS [dbo].[Bridge BuildingProperty]",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Area",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Area] AS\nSELECT\n     [area_id] AS AreaID\n\t,[area_key] AS 'Area Key'\n\t,[area_code] AS 'Area Code'\n\t,[area_description] AS 'Area Description'\n\t,[area_code_and_description] AS 'Area Code And Description'\n\t,[area_hierarchy_level_1_code] AS 'Area Hierarchy Level 1 Code'\n\t,[area_hierarchy_level_1_description] AS 'Area Hierarchy Level 1 Description'\n\t,[area_hierarchy_level_2_code] AS 'Area Hierarchy Level 2 Code'\n\t,[area_hierarchy_level_2_description] AS 'Area Hierarchy Level 2 Description'\n\t,[area_parking_hierarchy_level_1_code] AS 'Area Parking Hierarchy Level 1 Code'\n\t,[area_parking_hierarchy_level_1_description] AS 'Area Parking Hierarchy Level 1 Description'\n\t,[area_parking_hierarchy_level_2_code] AS 'Area Parking Hierarchy Level 2 Code'\n\t,[area_parking_hierarchy_level_2_description] AS 'Area Parking Hierarchy Level 2 Description'\nFROM dim_area\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Calendar",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Calendar] AS\nSELECT\n    [calendar_key] AS 'Calendar Key',\n\t[calendar_date] AS 'Calendar Date',\n\t[quarter_no] AS 'Quarter No',\n\t[month_code] AS 'Month Code',\n\t[month_no] AS 'Month No',\n\t[month_name] AS 'Month Name',\n\t[month_name_short] AS 'Month Name Short',\n\t[year_month_short] AS 'Year Month Short',\n\t[week_no] AS 'Week No',\n\t[weekday_no] AS 'Weekday No',\n\t[weekday_name] AS 'Weekday Name',\n\t[day_of_month] AS 'Day of Month',\n\t[year] AS 'Year',\n\t[calendar_day_counter] AS 'Calendar Day Counter',\n\t[calendar_month_counter] AS 'Calendar Month Counter',\n\t[calendar_year_counter] AS 'Calendar Year Counter',\n\t[calendar_week_counter] AS 'Calendar Week Counter',\n\t[calendar_quarter_counter] AS 'Calendar Quarter Counter',\n\t[5_year_period] AS '5 Year Period'\nFROM dim_calendar\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Property",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Property] AS\nSELECT\n    property_id AS 'PropertyID',\n    property_key AS 'Property Key',\n    property_no AS 'Property No',\n    property_name AS 'Property Name',\n    property_type AS 'Property Type',\n    property_location AS 'Property Location',\n    property_status AS 'Property Status'\nFROM dim_property\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Department",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Department] AS\nSELECT \n\t [department_id]\tAS 'DepartmentID'\n\t,[department_key]\tAS 'Department Key'\n\t,[department_no]\tAS 'Department No'\n\t,[department_no_sort]\tAS 'Department No Sort'\n\t,[department]\tAS 'Department'\n\t,[department_no_and_department]\tAS 'Department No And Department'\n\t,[department_parent_no]\tAS 'Department Parent No'\n\t,[department_level_1_no_and_department] \tAS 'Department Level 1 No And Department'\nFROM [dbo].[dim_department]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Project",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Project] AS\nSELECT\n\t[project_id] AS 'ProjectID',\n\t[project_key] AS 'Project Key',\n\t[project_no] AS 'Project No',\n\t[project_name] AS 'Project Name',\n\t[project_no_and_name] AS 'Project',\n\t[project_group] AS 'Project Group',\n\t[project_stage] AS 'Project Stage',\n\t[project_status] AS 'Project Status',\n\t[project_parent_project_no] AS 'Project Parent Project No',\n\t[project_hierarchy_level_1] AS 'Project Hierarchy Level 1',\n\t[project_hierarchy_level_2] AS 'Project Hierarchy Level 2',\n\t[project_hierarchy_level_3] AS 'Project Hierarchy Level 3',\n\t[project_hierarchy_level_4] AS 'Project Hierarchy Level 4',\n\t[project_hierarchy_level_5] AS 'Project Hierarchy Level 5',\n\t[project_hierarchy_level_6] AS 'Project Hierarchy Level 6',\n\t[project_hierarchy_level_7] AS 'Project Hierarchy Level 7',\n\t[project_hierarchy_level_8] AS 'Project Hierarchy Level 8',\n\t[project_hierarchy_level_9] AS 'Project Hierarchy Level 9',\n\t[project_hierarchy_level_10] AS 'Project Hierarchy Level 10',\n\t[project_hierarchy_level_11] AS 'Project Hierarchy Level 11',\n\t[project_hierarchy_level_12] AS 'Project Hierarchy Level 12',\n\t[project_hierarchy_level_13] AS 'Project Hierarchy Level 13',\n\t[project_hierarchy_level_14] AS 'Project Hierarchy Level 14',\n\t[project_hierarchy_level_15] AS 'Project Hierarchy Level 15',\n\t[project_responsible] AS 'Project Responsible',\n\t[project_investment_report_level_1] AS 'Project Investment Report Level 1',\n\t[project_investment_report_level_1_sort] AS 'Project Investment Report Level 1 Sort'\nFROM [dbo].[dim_project]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Customer",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Customer] AS\nSELECT \n\t [customer_id]\tAS [CustomerID]\n\t,[customer_no]\tAS [Customer No]\n\t,[customer_name]\tAS [Customer Name]\n\t,[customer_classification]\tAS [Customer Classification]\n\t,[customer_group]\t\tAS [Customer Group]\n\t,[customer_full_address]\tAS [Customer Full Address]\n\t,[customer_street]\t\t\tAS [Customer Street]\n\t,[customer_zip]\t\t\t\tAS [Customer Zip]\n\t,[customer_city]\t\t\tAS [Customer City]\n\t,[customer_country_code]\tAS [Customer Country Code]\n\t,[customer_source]\t\t\tAS [Customer Source]\nFROM [dbo].[dim_customer]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Customer Tenant",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Customer Tenant] AS\nSELECT \n\t [customer_id]\tAS [CustomerTenantID]\n\t,[customer_key]\tAS [Customer Tenant Key]\n\t,[customer_no]\tAS [Customer Tenant No]\n\t,[customer_name]\tAS [Customer Tenant Name]\n\t,[customer_classification]\tAS [Customer Tenant Classification]\n\t,[customer_group]\tAS [Customer Tenant Group]\nFROM [dbo].[dim_customer]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Lease Category",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Lease Category] AS\nSELECT \n\t [lease_category_id]\t\t\t\t\tAS [LeaseCategoryId]\n\t,[lease_category_key]\t\t\t\t\tAS [Lease Category Key]\n\t,[lease_category_code]\t\t\t\t\tAS [Lease Category Code]\n\t,[lease_category_description]\t\t\tAS [Lease Category Description]\n\t,[lease_category_level_1]\t\t\t\tAS [Lease Category Level 1]\n\t,[lease_category_level_2]\t\t\t\tAS [Lease Category Level 2]\n\t,[lease_category_level_3]\t\t\t\tAS [Lease Category Level 3]\n\t,[lease_category_code_and_description]\tAS [Lease Category Code And Description]\nFROM [dbo].[dim_lease_category]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Project Category",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Project Category] AS\nSELECT\n         [project_category_id]  AS 'ProjectCategoryID'\n         ,[project_category_key] AS 'Project Category Key'\n         ,[project_category_identifier] AS 'Project Category Identifier'\n         ,[project_category_name] AS 'Project Category Name'\n         ,[project_category_group_name]  AS 'Project Category Group Name'\n         ,[project_category_cost_type] AS 'Project Category Cost Type'\nFROM [dbo].[dim_project_category]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Building",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Building] AS\nSELECT\n        [building_id]   AS 'BuildingID'\n        ,[building_key] AS 'Building Key'\n        ,[building_name]    AS 'Building Name'\n        ,[building_alternative_name]    AS 'Building Alternative Name'\n        ,[building_hierarchy_level_1]   AS 'Building hierarchy level 1'\n        ,[building_hierarchy_level_2]   AS 'Building hierarchy level 2'\n        ,[building_street_name] AS 'Building Street Name'\n        ,[building_street_no]   AS 'Building Street No'\n        ,[building_zip_code]        AS 'Building Zip Code'\n        ,[building_city]    AS 'Building City'\n        ,[building_owned]   AS 'Building Owned'\n        ,[building_year_of_construction]    AS 'Building Year Of Construction'\n        ,[building_status]  AS 'Building Status'\n        ,[building_type]        AS 'Building Type'\n        ,[building_primary_use] AS 'Building Primary Use'\n        ,[building_secondary_use]   AS 'Building Secondary Use'\n        ,[building_tertiary_use]    AS 'Building Tertiary Use'\n        ,[building_category]        AS 'Building  Category'\n        ,[building_insurance_company]   AS 'Building Insurance Company'\n        ,[building_registration_number] AS 'Building Registration Number'\n        ,[building_protected_presevation]   AS 'Building Protected Presevation'\n        ,[building_calculation_basis_1_risk_sum_for_protection] AS 'Building Calculation Basis, 1. Risk Sum For Protection'\n        ,[building_notes]   AS 'Building Notes'\n        ,[building_security]    AS 'Building Security'\n        ,[building_dalux_link]  AS 'Building Dalux Link'\n        ,[building_flex_property_nr] AS 'Building Flex Property Nr'\nFROM [dbo].[dim_building]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Building Floor",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Building Floor] AS\nSELECT DISTINCT\n    [building_floor_id] AS 'BuildingFloorID',\n    [building_floor_key] AS 'Building Floor Key',\n    [building_floor_name] AS 'Building Floor Name',\n    [building_floor_description] AS 'Building Floor Description'\nFROM [dbo].[dim_building_floor]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Lease Contract",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Lease Contract] AS\nSELECT\n     [lease_contract_id] AS 'LeaseContractID'\n    ,[lease_contract_key]    AS 'Lease Contract Key'\n    ,[lease_contract_no] AS 'Lease Contract No'\n    ,[lease_contract_description] AS 'Lease Contract Description'\n    ,[lease_contract_status] AS 'Lease Contract Status'\n    ,[lease_contract_type]   AS 'Lease Contract Type'\n    ,[lease_contract_billing_frequenecy] AS 'Lease Contract Billing Frequenecy'\n    ,[lease_contract_start_date] AS 'Lease Contract Start Date'\n    ,[lease_contract_end_date]   AS 'Lease Contract End Date'\n    ,[lease_contract_revision_date]  AS 'Lease Contract Revision Date'\n    ,[lease_contract_irrevocability_tenant_expiry_date]  AS 'Lease Contract Irrevocability Tenant Expiry Date'\n    ,[lease_contract_irrevocability_landlord_expiry_date] AS 'Lease Contract Irrevocability Landlord Expiry Date'\n    ,[lease_contract_termination_notice_tenant_months]  AS 'Lease Contract Termination Notice Tenant Months'\n    ,[lease_contract_termination_notice_tenant_startup_months] AS 'Lease Contract Termination Notice Tenant Startup Months'\n    ,[lease_contract_termination_notice_tenant_startup_end_date] AS 'Lease Contract Termination Notice Tenant Startup End Date'\n    ,[lease_contract_termination_notice_landlord_months]  AS 'Lease Contract Termination Notice Landlord Months'\n    ,[lease_contract_default_dimension_property]        AS 'Lease Contract Default Dimension Property'\n    ,[lease_contract_default_dimension_business_unit]  AS 'Lease Contract Default Dimension Business Unit'\n    ,[lease_contract_default_dimension_area]           AS 'Lease Contract Default Dimension Area'\n    ,[lease_contract_default_dimension_department]     AS 'Lease Contract Default Dimension Department'\n    ,[lease_contract_default_dimension_lease_category] AS 'Lease Contract Default Dimension Lease Category'\n    ,[lease_contract_forecast_expiration_date]         AS 'Lease Contract Forecast Expiration Date'\nFROM dbo.dim_lease_contract\nWHERE lh_is_deleted = 0;",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Vendor",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Vendor] AS\nSELECT\n     [vendor_id]            AS 'VendorID'\n    ,[vendor_key]           AS 'Vendor Key'\n    ,[vendor_no]            AS 'Vendor No'\n    ,[vendor_name]          AS 'Vendor Name'\nFROM dbo.dim_vendor\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Project Transactions",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Project Transactions] AS\nSELECT\n    [projecttransactions_id] AS 'ProjectTransactionsID',\n    [calendar_key] AS 'Calendar Key',\n    [department_id] AS 'DepartmentID',\n    [area_id] AS 'AreaID',\n    [business_unit_id] AS 'BusinessUnitID',\n    [property_id] AS 'PropertyID',\n    [project_id] AS 'ProjectID',\n    [project_category_id] AS 'ProjectCategoryID',\n    [vendor_id] AS 'VendorID',\n    [building_id] AS 'BuildingID',\n    [financial_account_id] AS 'FinancialAccountID',\n    [resource_id] AS 'ResourceID',\n    [currency_id] AS 'CurrencyID',\n    [company_id] AS 'CompanyID',\n    [transaction_type] AS 'Transaction Type',\n    [description] AS 'Description',\n    [voucher_number] AS 'Voucher Number',\n    [project_transactions_cost_amount] AS 'Project Transactions Cost Amount',\n    [project_transactions_quantity] AS 'Project Transactions Quantity'\nFROM [dbo].[fact_projecttransactions]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Item",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Item] AS\nSELECT \n    [item_id]           AS 'ItemID',\n    [item_key]          AS 'Item Key',\n    [item_number]       AS 'Item Number',\n    [item_name]         AS 'Item Name',\n    [item_group_name]   AS 'Item Group Name',\n    [item_collection_group_name]   AS 'Item Collection Group Name'\nFROM [dbo].[dim_item]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Property Unit",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Property Unit] AS\nSELECT \n\t [property_unit_id]\t\t\t\t\tAS [PropertyUnitId]\n\t,[property_unit_key]\t\t\t\tAS [Property Unit Key]\n\t,[property_key]\t\t\t\t\t\tAS [Property Key]\n\t,[building_floor_key]\t\t\t\tAS [Building Floor Key]\n\t,[property_unit_code]\t\t\t\tAS [Property Unit Code]\n\t,[property_unit_address]\t\t\tAS [Property Unit Address]\n\t,[property_unit_count]\t\t\t\tAS [Property Unit Count]\n\t,[property_unit_identifier]\t\t\tAS [Property Unit Identifier]\n\t,[property_unit_description]\t\tAS [Property Unit Description]\n\t,[property_unit_status]\t\t\t\tAS [Property Unit Status]\n\t,[property_unit_main_type]\t\t\tAS [Property Unit Main Type]\n\t,[property_unit_type]\t\t\t\tAS [Property Unit Type]\n\t,[default_dimension_property]\t\tAS [Default Dimension Property]\n\t,[default_dimension_business_unit]\tAS [Default Dimension Business Unit]\n\t,[default_dimension_area]\t\t\tAS [Default Dimension Area]\n\t,[default_dimension_department]\t\tAS [Default Dimension Department]\n\t,[default_dimension_lease_category]\tAS [Default Dimension Lease Category]\nFROM [dbo].[dim_property_unit]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Fact Lease Contract Transactions",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Fact Lease Contract Transactions] AS\nSELECT\n     [leasecontracttransactions_id] AS 'LeaseContractTransactionsID'\n    ,[department_id]                AS 'DepartmentID'\n    ,[area_id]                      AS 'AreaID'\n    ,[business_unit_id]             AS 'BusinessUnitID'\n    ,[lease_category_id]            AS 'LeaseCategoryID'\n    ,[property_id]                  AS 'PropertyID'\n    ,[building_floor_id]            AS 'BuildingFloorID'\n    ,[lease_contract_id]            AS 'LeaseContractID'\n    ,[customer_tenant_id]           AS 'CustomerTenantID'\n    ,[item_id]                      AS 'ItemID'\n    ,[property_unit_id]             AS 'PropertyUnitID'\n\n    ,[company_id] AS 'CompanyID'\n    ,[calendar_key]                 AS 'Calendar Key'\n    ,[sales_unit]                   AS 'Sales Unit'\n    ,[amount]                       AS 'Amount'\n    ,[quantity]                     AS 'Quantity'\nFROM [dbo].[fact_leasecontracttransactions]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Lease Contract Lines",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Fact Lease Contract Lines] AS\nSELECT      \n     [lease_contract_lines_id]            AS 'FactLeasecontractLinesID'\n    ,[department_id]                    AS 'DepartmentID'\n    ,[area_id]                          AS 'AreaID'\n    ,[business_unit_id]                 AS 'BusinessUnitID'\n    ,[lease_category_id]                AS 'LeaseCategoryID'\n    ,[property_id]                      AS 'PropertyID'\n    ,[building_floor_id]                AS 'BuildingFloorID'\n    ,[property_unit_id]                 AS 'PropertyUnitID'\n    ,[lease_contract_id]                AS 'LeaseContractID'\n    ,[customer_tenant_id]               AS 'CustomerTenantID'\n    ,[item_id]                          AS 'ItemID'\n   ,[company_id] AS 'CompanyID'\n    ,[calendar_key]                     AS 'Calendar Key'\n    ,[description]                      AS 'Description'\n    ,[unit]                             AS 'Unit'\n    ,[monthly_quantity]                 AS 'Monthly Quantity'\n    ,[monthly_amount]                   AS 'Monthly Amount'\n    ,[monthly_square_meters]            AS 'Monthly Square Meters'\n    ,[status]                           AS 'Status'\nFROM [dbo].[fact_lease_contract_lines]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Financial Account",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Financial Account] AS\nSELECT\n     [financial_account_id]     \t\tAS 'FinancialAccountID'\n\t,[financial_account_key]    \t\tAS 'Financial Account Key'\n\t,[financial_account_number] \t\tAS 'Financial Account Number'\n\t,[financial_account_name]   \t\tAS 'Financial Account Name'\n\t,[financial_account]        \t\tAS 'Financial Account'\n\t,[financial_account_group]\t\t\tAS 'Financial Account Group'\n\t,[financial_account_type]\t\t\tAS 'Financial Account Type'\n\t,[financial_account_type_sort]\t\tAS 'Financial Account Type Sort'\n\t,[financial_account_category]\t\tAS 'Financial Account Category'\n\t,[financial_account_category_sort]\tAS 'Financial Account Category Sort'\n\t,[financial_account_parking_product_type] AS 'Financial Account Parking Product Type'\n\t,[financial_account_reporting_level1]\t\tAS 'Financial Account Reporting Level 1'\n\t,[financial_account_reporting_level2]\t\tAS 'Financial Account Reporting Level 2'\n\t,[financial_account_reporting_level1_sort]\tAS 'Financial Account Reporting Level 1 Sort'\n\t,[financial_account_reporting_level2_sort]\tAS 'Financial Account Reporting Level 2 Sort'\nFROM [dbo].[dim_financial_account]\nWHERE lh_is_deleted = 0\t\t",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Building Areas",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Building Areas] AS \nSELECT\n\t [buildingareas_id]         AS 'BuildingareasID'\n\t,[area_id]                  AS 'AreaID'\n\t,[building_id]              AS 'BuildingID'\n\t,[calendar_key]             AS 'Calendar Key'\n\t,[gross_area]               AS 'Gross Area'\n\t,[net_area]                 AS 'Net Area'\nFROM [dbo].[fact_buildingareas]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Resource",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Resource] AS\nSELECT\n         [resource_id]                  AS 'ResourceID'\n\t,[resource_key]                 AS 'Resource Key'\n\t,[resource_no]                  AS 'Resource No'\n\t,[resource_name]                AS 'Resource Name'\n\t,[resource_no_and_name]         AS 'Reource No And Name'\n\t,[resource_type]                AS 'Resource Type'\nFROM [dbo].[dim_resource]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Budget",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Budget] AS\nSELECT\n     [budget_id]                    AS [BudgetID]\n\t,[budget_key]             \t\tAS [Budget Key]\n\t,[budget_model]                 AS [Budget Model]\n\t,[budget_transaction_code]      AS [Budget Transaction Code]\nFROM [dbo].[dim_budget]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Currency",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Currency] AS\nSELECT\n         [currency_id]          AS [CurrencyID]\n\t,[currency_key]         AS [Currency Key]\n\t,[currency_code]        AS [Currency Code]\n\t,[currency_name]        AS [Currency Name]\nFROM [dbo].[dim_currency]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Financial Budget Entries",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Financial Budget Entries] AS\nSELECT DISTINCT\n    [financial_budget_entries_id] AS 'FinancialBudgetEntriesID',\n\t[department_id] AS 'DepartmentID',\n\t[business_unit_id] AS 'BusinessUnitID',\n\t[financial_account_id] AS 'FinancialAccountID',\n\t[budget_id] AS 'BudgetID',\n        [company_id] AS 'CompanyID',\n\t[project_id] AS 'ProjectID',\n\t[project_category_id] AS 'ProjectCategoryID',\n\t[calendar_key] AS 'Calendar Key',\n\t[comment] AS 'Comment',\n    [accounting_currency_amount] AS 'Accounting Currency Amount'\nFROM [dbo].[fact_financial_budget_entries]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Financial Transactions",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Financial Transactions] AS\nSELECT\n\t [calendar_key] \t\t\t\tAS 'Calendar Key'\n\t,[financial_transactions_id] \t\tAS 'FinancialTransactionsID'\n\t,[department_id]\t\t\t\tAS 'DepartmentID'\n\t,[area_id]\t\t\t\t\t\tAS 'AreaID'\n\t,[business_unit_id]\t\t\t\tAS 'BusinessUnitID'\n\t,[lease_category_id]\t\t\t\tAS 'LeaseCategoryID'\n\t,[property_id]\t\t\t\t\tAS 'PropertyID'\n\t,[project_id]\t\t\t\t\tAS 'ProjectID'\n\t,[financial_account_id]\t\t\tAS 'FinancialAccountID'\n\t,[currency_id]\t\t\t\t\tAS 'CurrencyID'\n\t,[asset_id]\t\t\t\t\tAS 'AssetID'\n        ,[company_id] \t\t\t\t\tAS 'CompanyID'\n\t,[transaction_text]\t\t\t\tAS 'Transaction Text'\n\t,[voucher_number]\t\t\t\tAS 'Voucher Number'\n\t,[posting_type]\t\t\t\tAS 'Posting Type'\n\t,[transaction_currency_amount]\tAS 'Transaction Currency Amount'\n\t,[accounting_currency_amount]\tAS 'Accounting Currency Amount'\nFROM [dbo].[fact_financial_transactions]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Asset",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Asset] AS\nSELECT\n        [asset_id] AS 'AssetID',\n\t[asset_key] AS 'Asset Key',\n\t[asset_code] AS 'Asset Code',\n\t[asset_description] AS 'Asset Description',\n\t[asset_code_description] AS 'Asset Code Description',\n\t[asset_sorting_level_1] AS 'Asset Sorting Level 1',\n    [asset_sorting_level_2] AS 'Asset Sorting Level 2',\n    [asset_sorting_level_3] AS 'Asset Sorting Level 3',\n\t[default_dimension_business_unit] AS 'Default Dimension Business unit',\n    [default_dimension_area] AS 'Default Dimension Area',\n    [default_dimension_department] AS 'Default Dimension Department'\nFROM [dbo].[dim_asset]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Project Investment Budget",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Project Investment Budget] AS\nSELECT\n    [projectinvestmentbudget_id] AS 'ProjectInvestmentBudgetID',\n\t[project_id] AS 'ProjectID',\n\t[department_id] AS 'DepartmentID',\n\t[area_id] AS 'AreaID',\n\t[business_unit_id] AS 'BusinessUnitID',\n\t[property_id] AS 'PropertyID',\n\t[comment] AS 'Comment',\n\t[budget_year] AS 'Budget Year',\n\t[InvestmentBudgetAmount] AS 'Investment Budget Amount',\n\t[InvestmentReservesAmount] AS 'Investment Reserves Amount',\n\t[InvestmentEstimateAmount] AS 'Investment Estimate Amount',\n    [InvestmentRemaningBudgetPreviousYearsAmount],\n    [InvestmentTransferReserversAmount],\n    [InvestmentIndexRegulationPreviousYear],\n    [InvestmentIndexRegulationDaa],\n    [InvestmentTransferAssetAutoPreviousYear],\n    [InvestmentTransferToAsset93PreviousYear],\n    [InvestmentAssetTransfer4xxxxAuto],\n    [InvestmentAssetTransferAuto],\n    [InvestmentAssetTransfer4xxxxGroup93],\n    [InvestmentAssetTransferGroup93]\nFROM [dbo].[fact_projectinvestmentbudget]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Company",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Company] AS\nSELECT \n\t[company_id] AS [CompanyID],\n\t[company_key] AS [Company Key],\n\t[company_name] AS [Company name],\n\t[company_recid] AS [Company recId],\n\t[company_bank] AS [Company bank]\nFROM [dbo].[dim_company]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Bridge Building Property",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Bridge BuildingProperty] AS\nSELECT \n\t[building_id] as [Bygning ID],\n\t[property_id] as [Egendom ID]\nFROM [dbo].[bridge_buildingproperty]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Time",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Time] AS\nSELECT \n\t [time_key]\tAS [Time Key]\n\t,[hour_24]\tAS [Hour 24]\n\t,[hour_12]\tAS [Hour 12]\n\t,[am_pm]\t\tAS [AM PM]\n\t,[minute]\t\tAS [Minute]\n\t,[second]\t\tAS [Second]\n\t,[time_in_24h_format]\t\tAS [Time In 24H Format]\n\t,[time_in_12h_format]\t\tAS [Time In 12H Format]\n\t,[hour_minute]\t\tAS [Hour Minute]\n\t,[time_grouping]\tAS [Time Grouping]\n\t,[time_of_day]\t\tAS [Time Of Day]\n\t,[hour_bucket]\t\tAS [Hour Bucket]\n\t,[minute_of_day]\t\tAS [Minute Of Day]\n\t,[quarter_hour]\t\tAS [Quarter Hour]\n\t,[half_hour]\t\tAS [Half Hour]\nFROM [dbo].[dim_time]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Charge Point",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW dbo.[Dim Charge Point] AS\nSELECT\n        [chargepoint_id] AS 'ChargepointID'\n\t,[chargepoint_code] AS 'Charge Point Code'\n\t,[chargepoint_name] AS 'Charge Point Name'\n\t,[chargepoint_operator_name] AS 'Charge Point Operator'\n\t,[chargepoint_max_power] AS 'Charge Point Max Power'\n\t,[chargepoint_location_type] AS 'Charge Point Location Type'\n    ,[chargepoint_location_name] AS 'Charge Point Location Name'\n    ,[chargepoint_location_address] AS 'Charge Point Location Address'\n\t,[chargepoint_location_zip_code] AS 'Charge Point Location Zip Code'\nFROM [dbo].[dim_chargepoint]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Charges",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Charges] AS\nSELECT\n         [charges_id] AS 'ChargesID'\n        ,[transaction_id] AS 'TransactionID'\n\t,[chargepoint_id] AS 'ChargePointID'\n\t,[area_id] AS 'LocationID'\n\t,[building_id] AS 'BuildingID'\n\t,[calendar_key] AS 'Calendar Key'\n\t,[calendar_start_key] AS 'CalendarStartDate Key'\n\t,[calendar_end_key] AS 'CalendarEndDate Key'\n\t,[time_start_key] AS 'TimeStartSeconds Key'\n\t,[time_end_key] AS 'TimeEndSeconds Key'\n\t,[charge_price_amount] AS 'ChargePriceAmount'\n\t,[charge_price_ex_vat_amount] AS 'ChargePriceExVatAmount'\n\t,[currency_id] AS 'CurrencyID'\n\t,[charge_price_per_kwh] AS 'Charge Price Per Kwh'\n\t,[charge_duration_seconds] AS 'ChargeDurationSeconds'\n\t,[charge_duration_idle_seconds] AS 'ChargeDurationIdleSeconds'\n\t,[charge_duration_total_seconds] AS 'ChargeDurationTotalSeconds'\n\t,[charge_consumed_kwh] AS 'ChargeConsumedKwh'\n\t,[charge_co2_emitted] AS 'ChargeCo2Emitted'\n\t,[charge_roaming_operator] AS 'Charge Roaming Operator'\n\t,[charge_roaming_operator_filter] AS 'Charge Roaming Operator Filter'\n\t,[charge_is_voucher_customer_flag] AS 'Charge Is Voucher Customer Flag'\n\t,[charge_voucher_group_name] AS 'Charge Voucher Group Name'\nFROM [dbo].[fact_charges]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Product",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Product] AS\nSELECT \n\t[product_id] AS [ProductID],\n\t[product_code] AS [Product Code],\n\t[product_name] AS [Product Name],\n\t[product_type] AS [Product Type],\n\t[product_category] AS [Product Category],\n\t[product_allows_car_flag] AS [Product Allows Car Flag],\n\t[product_allows_motorcycle_flag] AS [Product Allows Motorcycle Flag],\n\t[product_resident_flag] AS [Product Resident Flag],\n\t[product_business_flag] AS [Product Business Flag],\n\t[product_subscription_flag] AS [Product Subscription Flag],\n\t[product_active_flag] AS [Product Active Flag]\nFROM [dbo].[dim_product]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Dim Parking Product Category",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Dim Parking Product Category] AS\nSELECT \n\t[parking_product_category_id] AS [ParkingProductCategoryID],\n\t[parking_product_category_key] AS [Parking Product Category Key],\n\t[parking_product_category_name] AS [Parking Product Category Name]\nFROM [dbo].[dim_parking_product_category]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      },
+      {
+        "name": "Generate View Fact Customer Licenses",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Drop Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "linkedService": {
+          "name": "906878fb_27ef_4392_9930_f8a07b7dd8b6",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "@variables('SQLConnectionString')",
+              "artifactId": "@variables('SQLEndpointID')",
+              "workspaceId": "@variables('WorkspaceStoreID')"
+            }
+          }
+        },
+        "typeProperties": {
+          "scripts": [
+            {
+              "type": "Query",
+              "text": {
+                "value": "CREATE VIEW [dbo].[Fact Customer Licenses] AS\nSELECT\n      [customerlicenses_id] AS 'CustomerLicensesID'\n      ,[customer_id] AS 'CustomerID'\n      ,[area_id] AS 'AreaID'\n      ,[calendar_key] AS 'Calendar Key'\n      ,[product_id] AS 'ProductID'\n      ,[parking_product_category_id] AS 'ParkingProductCategoryID'\n      ,[customer_licenses_is_danish_plate] AS 'CustomerLicensesIsDanishPlate'\n      ,[customer_licenses_is_disabled_parking] AS 'CustomerLicensesIsDisabledParking'\n      ,[customer_licenses_vehicle_type] AS 'CustomerLicensesVehicleType'\n      ,[customer_licenses_reserved_spot] AS 'CustomerLicensesReservedSpot'\n      ,[customer_licenses_order_number] AS 'CustomerLicensesOrderNumber'\n      ,[customer_licenses_registration_number] AS 'CustomerLicensesRegistrationNumber'\n      ,[customer_licenses_record_type] AS 'CustomerLicensesRecordType'\n      ,[customer_licenses_quantity] AS 'CustomerLicensesQuantity'\nFROM [dbo].[fact_customerlicenses]\nWHERE lh_is_deleted = 0",
+                "type": "Expression"
+              }
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        }
+      }
+    ],
+    "variables": {
+      "CurrentWorkspaceID": {
+        "type": "String"
+      },
+      "SQLConnectionString": {
+        "type": "String"
+      },
+      "WorkspaceStoreID": {
+        "type": "String"
+      },
+      "SQLEndpointID": {
+        "type": "String"
+      }
+    }
+  }
+}

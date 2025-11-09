@@ -1,0 +1,347 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Landing to Base",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "ADF Controller_Master",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest Spirii",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "cb8c890c-de34-4ee4-a099-ad93e73e9688",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5"
+        }
+      },
+      {
+        "name": "D365FOLandingToBase",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "ADF Controller_Master",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest Spirii",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 3,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "9fa0bfa5-4dba-4b62-8eae-9fafc570942b",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5"
+        }
+      },
+      {
+        "name": "Base to Curate",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "Landing to Base",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "D365FOLandingToBase",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 3,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "dd9d0324-f7e6-41e6-8fe0-bcf76cd4cfdd",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5"
+        }
+      },
+      {
+        "name": "Create Views",
+        "type": "InvokePipeline",
+        "dependsOn": [
+          {
+            "activity": "Update SQL Endpoint",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "waitOnCompletion": true,
+          "operationType": "InvokeFabricPipeline",
+          "pipelineId": "3a0f1db1-3f2b-43d0-ac93-e2eb316e7ef1",
+          "workspaceId": "d38c0378-d5b9-43b4-bfa1-ebcafeae712f",
+          "parameters": {}
+        },
+        "externalReferences": {
+          "connection": "e29de88b-e553-4fd7-8591-7280c2c6e36b"
+        }
+      },
+      {
+        "name": "ADF Controller_Master",
+        "type": "InvokePipeline",
+        "dependsOn": [
+          {
+            "activity": "Set WorkspaceID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "waitOnCompletion": true,
+          "operationType": "InvokeADFPipeline",
+          "pipelineName": "Controller_Master",
+          "parameters": {}
+        },
+        "externalReferences": {
+          "connection": "fb9aae20-8169-48f9-8ff2-85cce50a60b9"
+        }
+      },
+      {
+        "name": "If Prod Env - Error Notification",
+        "description": "Checks if the pipeline is run from the Prod environment by checking if the workspace id matches the workspace id of workspace \"B&H DP Code [Prod]\"",
+        "type": "IfCondition",
+        "dependsOn": [
+          {
+            "activity": "Semantic model refresh",
+            "dependencyConditions": [
+              "Skipped",
+              "Failed"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(variables('WorkspaceID'), 'f2b0acf4-02e1-46c3-985d-5efe06d978c5')",
+            "type": "Expression"
+          },
+          "ifFalseActivities": [
+            {
+              "name": "Pipeline Failed_copy1",
+              "description": "Make the master controller set as failed even though the activtiy \"Send Error Notification\" was successful.",
+              "type": "Fail",
+              "dependsOn": [],
+              "typeProperties": {
+                "message": "Pipeline failed. Inspect pipeline run for details.",
+                "errorCode": "500"
+              }
+            }
+          ],
+          "ifTrueActivities": [
+            {
+              "name": "Send Error Notification",
+              "description": "Sends an error notification to Data Platform Operations in case any previous activity fails.",
+              "type": "InvokePipeline",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureOutput": false,
+                "secureInput": false
+              },
+              "typeProperties": {
+                "waitOnCompletion": true,
+                "operationType": "InvokeFabricPipeline",
+                "pipelineId": "548436e9-ba7c-47e0-abe5-2248612971e4",
+                "workspaceId": "d38c0378-d5b9-43b4-bfa1-ebcafeae712f",
+                "parameters": {
+                  "ErrorPipelineName": {
+                    "value": "@pipeline().PipelineName",
+                    "type": "Expression"
+                  },
+                  "ErrorPipelineID": {
+                    "value": "@pipeline().Pipeline",
+                    "type": "Expression"
+                  },
+                  "ErrorPipelineRunID": {
+                    "value": "@pipeline().RunId",
+                    "type": "Expression"
+                  },
+                  "ErrorPipelineTriggerId": {
+                    "value": "@pipeline().TriggerId",
+                    "type": "Expression"
+                  },
+                  "ErrorPipelineTriggerTime": {
+                    "value": "@pipeline().TriggerTime",
+                    "type": "Expression"
+                  },
+                  "ErrorPipelineTriggerType": {
+                    "value": "@pipeline().TriggerType",
+                    "type": "Expression"
+                  }
+                }
+              },
+              "externalReferences": {
+                "connection": "e29de88b-e553-4fd7-8591-7280c2c6e36b"
+              }
+            },
+            {
+              "name": "Pipeline Failed",
+              "description": "Make the master controller set as failed even though the activtiy \"Send Error Notification\" was successful.",
+              "type": "Fail",
+              "dependsOn": [
+                {
+                  "activity": "Send Error Notification",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ],
+              "typeProperties": {
+                "message": "Pipeline failed. Inspect pipeline run for details.",
+                "errorCode": "500"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Set WorkspaceID",
+        "type": "SetVariable",
+        "dependsOn": [],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "WorkspaceID",
+          "value": {
+            "value": "@pipeline().DataFactory",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "Semantic model refresh",
+        "description": "The workspace ID checks to set the correct execution context based on the workspace from which the activity is executed. \n\n'97dead77-f72c-4b5c-8efd-3849fad7c6a0' -- Dev orchestration workspace\n'65d86d6e-8455-49dd-915c-92da1f12cb0b' -- Dev semantic workspace\n'2b42ca63-e8a3-44a9-92c8-1487b42d5dae' -- Tst orchestration workspace\n'8f46e004-6754-4c22-af55-1fddd1db3bf7'  -- Tstsemantic workspace\n'8441d976-f61b-4f5e-b7e8-34a2a092add8' -- Prd orchestration workspace\n'90d0959e-778f-42e8-9aa5-e1768a78fb7d'  -- Prd semantic workspace\n\nSemantic model ID is semantic in parameter, based on the GUID for the semantic model within the chosen workspace. ",
+        "type": "PBISemanticModelRefresh",
+        "dependsOn": [
+          {
+            "activity": "Create Views",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "method": "post",
+          "waitOnCompletion": true,
+          "commitMode": "Transactional",
+          "operationType": "SemanticModelRefresh",
+          "groupId": "0e955a64-1fc5-4a9e-946f-243c52cbf8c3",
+          "datasetId": "ce4a9fc3-73a6-48ca-b1dd-c75da4fd6786"
+        },
+        "externalReferences": {
+          "connection": "52a48d38-a1c2-4b28-93fe-b78df4db4b2e"
+        }
+      },
+      {
+        "name": "Ingest Spirii",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "Set WorkspaceID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "a07acfed-1667-44de-b314-149860b17540",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5"
+        }
+      },
+      {
+        "name": "Update SQL Endpoint",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "Base to Curate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "417b907b-d656-4037-af53-3b690f4ca73a",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5"
+        }
+      }
+    ],
+    "variables": {
+      "WorkspaceID": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Succeded or Failed",
+        "type": "IfCondition",
+        "dependsOn": [
+          {
+            "activity": "ADF Controller_Sharepoint",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(variables('Status'),'Succeeded')",
+            "type": "Expression"
+          },
+          "ifFalseActivities": [
+            {
+              "name": "Fail if not Succeeded",
+              "type": "Fail",
+              "dependsOn": [],
+              "typeProperties": {
+                "message": {
+                  "value": "@if(equals(variables('Status'), 'Cancelled'), 'Pipeline was cancelled', if(equals(variables('Status'), 'Failed'), 'Pipeline failed', 'Pipeline neither Failed nor Cancelled'))",
+                  "type": "Expression"
+                },
+                "errorCode": "1"
+              }
+            }
+          ],
+          "ifTrueActivities": []
+        }
+      },
+      {
+        "name": "BaseToCurated",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "LandingToBase",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "dd9d0324-f7e6-41e6-8fe0-bcf76cd4cfdd",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5",
+          "parameters": {
+            "load_fact_tables": {
+              "value": {
+                "value": "@pipeline().parameters.load_fact_tables",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "load_dim_tables": {
+              "value": {
+                "value": "@pipeline().parameters.load_dim_tables",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "LandingToBase",
+        "description": "Workspace set be set base on which orchestration workspace, the notebook is executed from.",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "Succeded or Failed",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "cb8c890c-de34-4ee4-a099-ad93e73e9688",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5",
+          "parameters": {
+            "load_landing_paths": {
+              "value": {
+                "value": "@pipeline().parameters.load_landing_paths",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "ADF Controller_Sharepoint",
+        "type": "InvokePipeline",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "waitOnCompletion": true,
+          "operationType": "InvokeADFPipeline",
+          "pipelineName": {
+            "value": "@pipeline().parameters.ADFPipelineName",
+            "type": "Expression"
+          },
+          "parameters": {}
+        },
+        "externalReferences": {
+          "connection": "fb9aae20-8169-48f9-8ff2-85cce50a60b9"
+        }
+      },
+      {
+        "name": "Semantic model refresh",
+        "type": "PBISemanticModelRefresh",
+        "dependsOn": [
+          {
+            "activity": "BaseToCurated",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "method": "post",
+          "waitOnCompletion": true,
+          "commitMode": "Transactional",
+          "operationType": "SemanticModelRefresh",
+          "groupId": "03d88e78-c558-4d1e-8223-70ca51940435",
+          "datasetId": "1fd21d85-f341-45d8-b90d-843a3240a180"
+        },
+        "externalReferences": {
+          "connection": "52a48d38-a1c2-4b28-93fe-b78df4db4b2e"
+        }
+      }
+    ],
+    "parameters": {
+      "ADFPipelineName": {
+        "type": "string",
+        "defaultValue": "Controller_IngestSharepointSite_PowerBI"
+      },
+      "load_fact_tables": {
+        "type": "string",
+        "defaultValue": "['FactProjectInvestmentBudget']"
+      },
+      "load_dim_tables": {
+        "type": "string",
+        "defaultValue": "['DimProject','DimFinancialAccount']"
+      },
+      "load_landing_paths": {
+        "type": "string",
+        "defaultValue": "['Files/landing/sharepointsitepowerbi/']"
+      }
+    },
+    "variables": {
+      "WorkspaceID": {
+        "type": "String"
+      },
+      "Status": {
+        "type": "String",
+        "defaultValue": "Inprogress"
+      }
+    }
+  }
+}

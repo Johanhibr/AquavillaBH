@@ -1,0 +1,217 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Semantic model refresh",
+        "description": "The workspace ID checks to set the correct execution context based on the workspace from which the activity is executed. \n\n'97dead77-f72c-4b5c-8efd-3849fad7c6a0' -- Dev orchestration workspace\n'65d86d6e-8455-49dd-915c-92da1f12cb0b' -- Dev semantic workspace\n'2b42ca63-e8a3-44a9-92c8-1487b42d5dae' -- Tst orchestration workspace\n'8f46e004-6754-4c22-af55-1fddd1db3bf7'  -- Tstsemantic workspace\n'8441d976-f61b-4f5e-b7e8-34a2a092add8' -- Prd orchestration workspace\n'90d0959e-778f-42e8-9aa5-e1768a78fb7d'  -- Prd semantic workspace\n\nSemantic model ID is semantic in parameter, based on the GUID for the semantic model within the chosen workspace. \n",
+        "type": "PBISemanticModelRefresh",
+        "dependsOn": [
+          {
+            "activity": "Base to Curated Facts async",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "method": "post",
+          "datasetId": "1fd21d85-f341-45d8-b90d-843a3240a180",
+          "commitMode": "Transactional",
+          "waitOnCompletion": true,
+          "operationType": "SemanticModelRefresh",
+          "objects": [],
+          "groupId": "03d88e78-c558-4d1e-8223-70ca51940435"
+        },
+        "externalReferences": {
+          "connection": "52a48d38-a1c2-4b28-93fe-b78df4db4b2e"
+        }
+      },
+      {
+        "name": "Curated Dependencies In Base",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "3c72c59a-45e8-4a87-9890-071f7bded7c8",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5",
+          "parameters": {
+            "load_fact_tables": {
+              "value": {
+                "value": "@pipeline().parameters.load_fact_tables",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "Set load_fact_tables",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "Curated Dependencies In Base",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "load_fact_tables",
+          "value": {
+            "value": "@json(activity('Curated Dependencies In Base').output.result.exitValue).load_fact_tables",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "Set load_base_tables",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "Curated Dependencies In Base",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "load_base_tables",
+          "value": {
+            "value": "@json(activity('Curated Dependencies In Base').output.result.exitValue).load_base_tables",
+            "type": "Expression"
+          }
+        }
+      },
+      {
+        "name": "D365FOLandingToBase",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "Set load_base_tables",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "9fa0bfa5-4dba-4b62-8eae-9fafc570942b",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5",
+          "parameters": {
+            "load_base_tables": {
+              "value": {
+                "value": "@variables('load_base_tables')",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "Base to Curated Facts async",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "D365FOLandingToBase",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Set load_fact_tables",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "notebookId": "6b3fe965-0246-4f04-aba8-342e8a382c71",
+          "workspaceId": "62575cf5-49bd-41c0-a5d3-9cc1430256d5",
+          "parameters": {
+            "load_fact_tables": {
+              "value": {
+                "value": "@variables('load_fact_tables')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "load_dim_tables": {
+              "value": "[]",
+              "type": "string"
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "SubscriptionId": {
+        "type": "string",
+        "defaultValue": "7a833cd1-613c-4362-a125-6a980c2adc5b"
+      },
+      "load_fact_tables": {
+        "type": "string",
+        "defaultValue": "['FactProjectTransactions','FactFinancialTransactions','FactFinancialBudgetEntries']"
+      }
+    },
+    "variables": {
+      "Status": {
+        "type": "String",
+        "defaultValue": "Inprogress"
+      },
+      "WorkspaceID": {
+        "type": "String"
+      },
+      "ResourceGroupName": {
+        "type": "String"
+      },
+      "DataFactoryName": {
+        "type": "String"
+      },
+      "NotebookIdMasterControllerParameters": {
+        "type": "String"
+      },
+      "load_fact_tables": {
+        "type": "String"
+      },
+      "load_base_tables": {
+        "type": "String"
+      }
+    }
+  }
+}

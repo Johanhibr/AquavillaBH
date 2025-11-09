@@ -1,0 +1,51 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Create Ticket in twoday Customer Care Service Desk",
+        "type": "WebActivity",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "method": "POST",
+          "headers": {},
+          "relativeUrl": "automation/webhooks/jira/a/1d37fd7e-9c62-4249-9346-91608657967e/01840ed0-039c-76ca-b5d4-f4afcd981212/58c2e8ca0c713b73728da9a922106869eea20a56",
+          "body": {
+            "value": "{\n  \"schemaId\": \"azureMonitorCommonAlertSchema\",\n  \"data\": {\n    \"essentials\": {\n      \"alertId\": \"/subscriptions/<subscription ID>/providers/Microsoft.AlertsManagement/alerts/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e\",\n      \"alertRule\": \"Error in Fabric Pipeline '@{pipeline().parameters.ErrorPipelineName}'\",\n      \"severity\": \"Sev3\",\n      \"signalType\": \"Metric\",\n      \"monitorCondition\": \"Resolved\",\n      \"monitoringService\": \"Platform\",\n      \"alertTargetIDs\": [\n        \"/subscriptions/<subscription ID>/resourcegroups/pipelinealertrg/providers/microsoft.compute/virtualmachines/wcus-r2-gen2\"\n      ],\n      \"configurationItems\": [\n        \"wcus-r2-gen2\"\n      ],\n      \"originAlertId\": \"3f2d4487-b0fc-4125-8bd5-7ad17384221e_PipeLineAlertRG_microsoft.insights_metricAlerts_WCUS-R2-Gen2_-117781227\",\n      \"firedDateTime\": \"2019-03-22T13:58:24.3713213Z\",\n      \"resolvedDateTime\": \"2019-03-22T14:03:16.2246313Z\",\n      \"description\": \"\",\n      \"essentialsVersion\": \"1.0\",\n      \"alertContextVersion\": \"1.0\"\n    },\n    \"alertContext\": {\n      \"properties\": null,\n      \"conditionType\": \"SingleResourceMultipleMetricCriteria\",\n      \"condition\": {\n        \"windowSize\": \"PT5M\",\n        \"allOf\": [\n          {\n            \"metricName\": \"Percentage CPU\",\n            \"metricNamespace\": \"Microsoft.Compute/virtualMachines\",\n            \"operator\": \"GreaterThan\",\n            \"threshold\": \"25\",\n            \"timeAggregation\": \"Average\",\n            \"dimensions\": [\n              {\n                \"name\": \"ResourceId\",\n                \"value\": \"3efad9dc-3d50-4eac-9c87-8b3fd6f97e4e\"\n              }\n            ],\n            \"metricValue\": 7.727\n          }\n        ]\n      }\n    },\n    \"customProperties\": {\n      \"Organization\": \"By & Havn\"\n    }\n  }\n}",
+            "type": "Expression"
+          }
+        },
+        "externalReferences": {
+          "connection": "248413b2-9246-47f1-b7f1-d9e2b4bce4b7"
+        }
+      }
+    ],
+    "parameters": {
+      "ErrorPipelineName": {
+        "type": "string",
+        "defaultValue": "NOTIFICATION TEST"
+      },
+      "ErrorPipelineID": {
+        "type": "string"
+      },
+      "ErrorPipelineRunID": {
+        "type": "string"
+      },
+      "ErrorPipelineTriggerId": {
+        "type": "string"
+      },
+      "ErrorPipelineTriggerTime": {
+        "type": "string"
+      },
+      "ErrorPipelineTriggerType": {
+        "type": "string"
+      }
+    }
+  }
+}

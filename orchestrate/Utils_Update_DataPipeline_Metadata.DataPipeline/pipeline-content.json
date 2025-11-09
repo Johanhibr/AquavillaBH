@@ -1,0 +1,109 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Get Data Pipelines",
+        "type": "WebActivity",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "method": "GET",
+          "headers": {
+            "Content-Type": "application/json;charset=utf8"
+          },
+          "relativeUrl": {
+            "value": "@concat(\n    'workspaces/',\n    pipeline().DataFactory,\n    '/dataPipelines')",
+            "type": "Expression"
+          }
+        },
+        "externalReferences": {
+          "connection": "efca788b-2784-4563-95fc-cbbc5177baca"
+        }
+      },
+      {
+        "name": "Foreach Data Pipeline",
+        "description": "Loops through Data Pipelines to update Last Modified By",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "Get Data Pipelines",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Get Data Pipelines').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "name": "Update Data Pipeline check",
+              "description": "Check if Data Pipeline is subject to update based on DataPipelineList parameter.",
+              "type": "IfCondition",
+              "dependsOn": [],
+              "typeProperties": {
+                "expression": {
+                  "value": "@or(\n    contains(\n        pipeline().parameters.DataPipelineList,\n        item().displayName),\n        empty(pipeline().parameters.DataPipelineList\n    )\n)",
+                  "type": "Expression"
+                },
+                "ifFalseActivities": [],
+                "ifTrueActivities": [
+                  {
+                    "name": "Update Data Pipeline Description",
+                    "description": "Update Data Pipeline Description by added a space at the end of the description.",
+                    "type": "WebActivity",
+                    "dependsOn": [],
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 0,
+                      "retryIntervalInSeconds": 30,
+                      "secureOutput": false,
+                      "secureInput": false
+                    },
+                    "typeProperties": {
+                      "method": "PATCH",
+                      "headers": {
+                        "Content-Type": "application/json;charset=utf8"
+                      },
+                      "relativeUrl": {
+                        "value": "@concat(\n    'workspaces/',\n    pipeline().DataFactory,\n    '/dataPipelines/',\n    item().id)",
+                        "type": "Expression"
+                      },
+                      "body": {
+                        "value": "@concat(\n    '{\"description\":\"',\n    item().description,\n    ' ',\n    '\"}')",
+                        "type": "Expression"
+                      }
+                    },
+                    "externalReferences": {
+                      "connection": "efca788b-2784-4563-95fc-cbbc5177baca"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "parameters": {
+      "DataPipelineList": {
+        "type": "array",
+        "defaultValue": [
+          "Create Views",
+          "Controller Master",
+          "0_Send Error Notification",
+          "Controller Load Fact",
+          "Controller Load Sharepoint"
+        ]
+      }
+    }
+  }
+}

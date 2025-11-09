@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build">
+  <Sdk Name="Microsoft.Build.Sql" Version="0.2.0-preview" />
+  <PropertyGroup>
+    <Name>Metadata</Name>
+    <ProjectGuid>{E2D8A214-854D-4DB3-BD8F-569A9989CCBF}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <!--
+      ### Target platform values (DSP) ###
+      Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider (Azure SQL Database)
+      Microsoft.Data.Tools.Schema.Sql.SqlDbFabricDatabaseSchemaProvider (SQL database in Fabric or Fabric Mirrored SQL Database, preview)
+    -->
+    <ModelCollation>1033, CI</ModelCollation>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+  </Target>
+</Project>

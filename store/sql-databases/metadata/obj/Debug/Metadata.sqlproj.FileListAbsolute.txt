@@ -1,0 +1,12 @@
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\bin\Debug\Metadata.dacpac
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\bin\Debug\Metadata.dll
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\bin\Debug\Metadata.pdb
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\Metadata.sqlproj.AssemblyReference.cache
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\Metadata.GeneratedMSBuildEditorConfig.editorconfig
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\Metadata.sourcelink.json
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\Model.xml
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\refactor.xml
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\postdeploy.sql
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\predeploy.sql
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\Metadata.dll
+c:\repos\Fabric\TwodayAquaVilla\solution\store\sql-databases\metadata\obj\Debug\Metadata.pdb

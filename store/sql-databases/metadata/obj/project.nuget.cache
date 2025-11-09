@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "/LbT2oVVEGI=",
+  "success": true,
+  "projectFilePath": "c:\\repos\\Fabric\\TwodayAquaVilla\\solution\\store\\sql-databases\\metadata\\Metadata.sqlproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\PeerGrønnerup\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
+    "C:\\Users\\PeerGrønnerup\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net46\\1.0.0\\microsoft.netframework.referenceassemblies.net46.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
